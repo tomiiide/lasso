@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+## LASSO
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The frontend to the LASSO Protocol, a multicoin swap protocol.
 
 ## Available Scripts
 
