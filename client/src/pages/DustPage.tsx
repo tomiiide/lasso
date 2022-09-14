@@ -1,8 +1,13 @@
 import React from "react";
+
+// components
 import NavBar from "../components/NavBar";
 import { TokenCard } from "../components/TokenCard";
+import { CleanWidget } from "../components/CleanWidget";
 import { Typography, Grid, Button } from "@mui/material";
 import Loading from "react-loading";
+
+// hooks
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
@@ -146,7 +151,12 @@ function DustPage() {
             </div>
 
             {!isloading ? (
-              <>
+              <div
+                className={[
+                  "transition-all",
+                  selectedTokens.length > 0 ? "mr-96 " : "",
+                ].join(" ")}
+              >
                 <div className="mt-12 mb-6">
                   <Typography>
                     Select all the tokens you want to clean
@@ -172,12 +182,19 @@ function DustPage() {
                     ))}
                   </Grid>
                 </div>
-              </>
+              </div>
             ) : (
               <div className="w-100 flex flex-col items-center my-6">
                 <Loading />
-                <Typography variant="body1"> Loading your wallet</Typography>
+                <Typography variant="body1">
+                  {" "}
+                  Loading your wallet balance...
+                </Typography>
               </div>
+            )}
+
+            {selectedTokens.length > 0 && (
+              <CleanWidget selectedTokens={selectedTokens} />
             )}
           </section>
         </div>

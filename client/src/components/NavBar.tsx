@@ -3,7 +3,7 @@ import logo from "../logo.png"
 
 function NavBar() {
     return (
-      <div className="navbar bg-black">
+      <div className="navbar bg-black relative z-50">
       <div className="px-4 navbar-start">
       <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full">
