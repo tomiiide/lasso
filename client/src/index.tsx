@@ -9,25 +9,49 @@ import MarketplacePage from './pages/MarketplacePage';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {
+  Chain,
   getDefaultWallets,
   midnightTheme,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import {
-  chain,
   configureChains,
   createClient,
   WagmiConfig,
 } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
+import { ToastContainer } from 'react-toastify';
 import theme from './theme'
 
+const auroraChain: Chain = {
+  id: 1313161554,
+  name: 'Aurora',
+  network: 'aurora',
+  iconUrl: 'https://aurora.dev/static/favicon-32x32.png',
+  iconBackground: '#000',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Aurora Ether',
+    symbol: 'aETH',
+  },
+  rpcUrls: {
+    default: 'https://mainnet.aurora.dev',
+  },
+  blockExplorers: {
+    default: { name: 'Aurora Mainnet Explorer', url: 'https://explorer.mainnet.aurora.dev' },
+    etherscan: { name: 'Aurora Mainnet Explorer', url: 'https://explorer.mainnet.aurora.dev' },
+  },
+  testnet: false,
+};
+
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum],
+  [auroraChain],
   [
+    jsonRpcProvider({ rpc: chain => ({ http: chain.rpcUrls.default }) }),
     alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
     publicProvider()
   ]
@@ -61,6 +85,7 @@ root.render(
         <Route path="marketplace" element={<MarketplacePage />} />
         </Routes>
         </BrowserRouter>
+        <ToastContainer />
       </RainbowKitProvider>
     </WagmiConfig>
     </ThemeProvider>
