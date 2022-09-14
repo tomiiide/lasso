@@ -6,7 +6,7 @@ export function SignInButton(): JSX.Element {
 
   return (
     <div className="mt-4">
-      <MbButton onClick={signIn} label="Connect NEAR Wallet" />
+      <MbButton className="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded" onClick={signIn} label="Connect NEAR Wallet" />
     </div>
   );
 }
