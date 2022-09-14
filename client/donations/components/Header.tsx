@@ -1,5 +1,6 @@
 import { MbButton } from 'mintbase-ui';
 import { useWallet } from '../services/providers/WalletProvider';
+import React from "react"
 
 function Header(): JSX.Element {
   const {
@@ -23,8 +24,8 @@ function Header(): JSX.Element {
           round up for change
         </h1>
       {/** login/logout with wallet */}
-      <div className="text-white flex items-center sm:mr-2">
-        <MbButton className="button-85" onClick={buttonAction} label={buttonLabel} />
+      <div className="flex items-center sm:mr-2">
+        <MbButton className="button-55" onClick={buttonAction} label={buttonLabel} />
       </div>
     </nav>
   );
