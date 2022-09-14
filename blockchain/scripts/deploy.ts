@@ -1,8 +1,10 @@
 import { ethers } from "hardhat";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 async function main() {
   const maxSwaps: string = "4"
-  const exchangeAddress: string = "0x1111111254fb6c44bAC0beD2854e76F90643097d" // 1inch
+  const exchangeAddress: string = process.env.EXCHANGE! // 1inch
 
   const LassoSwap = await ethers.getContractFactory("LassoSwap");
   const lassoSwap = await LassoSwap.deploy(exchangeAddress, maxSwaps);

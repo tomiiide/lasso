@@ -1,3 +1,3 @@
 import { swap } from "./multiSwap";
 
-swap()
+// swap()

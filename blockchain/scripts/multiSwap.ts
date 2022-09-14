@@ -1,5 +1,5 @@
 import { ethers } from "hardhat";
-import { BytesLike, BigNumberish} from "ethers";
+import { BytesLike, BigNumberish, Signer} from "ethers";
 import { PromiseOrValue } from "../typechain-types/common"
 import axios from "axios";
 import * as dotenv from "dotenv";
@@ -64,7 +64,8 @@ export const swap = async (
     toTokenAddress: String,
     amount: Number[],
     destReceiver: String, 
-    chainId: Number
+    chainId: Number,
+    signer: Signer
 ) => { 
     
     const swaps: SwapParams[] = [];
@@ -83,17 +84,29 @@ export const swap = async (
         };
     
         swaps.push(swapParams);
-
-        
     }
 
     for(let i = 0; i < swaps.length; i++){
-        const response= await swapApi(chainId, swaps[i]);
+        const response = await swapApi(chainId, swaps[i]);
         const iface = new ethers.utils.Interface([
-            "function swap(address,tuple(address,address,address,address,uint256,uint256,uint256,bytes),bytes)",
+            "function swap(address,tuple(address,address,address,address,uint256,uint256,uint256,bytes),bytes) returns (uint256, uint256)",
         ]);
 
-        const decodedData = iface.decodeFunctionData("swap", response.data.data as BytesLike);
+        const tokenInterface = new ethers.utils.Interface([
+            "function approve(address spender, uint256 amount) external returns (bool)",
+        ]);
+
+        const token = new ethers.Contract(
+            response.data.fromToken.address,
+            tokenInterface,
+            signer
+        )
+
+        const tx = await token.approve(process.env.EXCHANGE, response.data.fromTokenAmount)
+        const receipt = await tx.wait()
+        console.log(receipt)
+        
+        const decodedData = iface.decodeFunctionData("swap", response.data.tx.data as BytesLike);
 
         console.log(decodedData.caller, decodedData.desc, decodedData.data);
 
@@ -114,7 +127,7 @@ export const swap = async (
         swapData.push(data_)
     }
 
-    const contract = await ethers.getContractAt("LassoSwap", LassoContract!);
+    const contract = await ethers.getContractAt("LassoSwap", LassoContract!, signer);
     const tx = await contract.multiSwap(swapDesc, swapData);
     await tx.wait()
 }
