@@ -69,21 +69,21 @@ function DustPage() {
 
   // state hooks
   const [isloading, setIsLoading] = React.useState(true);
-  const [selectedTokens, setSelectedTokens] = React.useState<Token[]>([]);
+  const [selectedTokens, setSelectedTokens] = React.useState<TokenBalance[]>([]);
   const [tokenBalances, setTokenBalances] = React.useState<TokenBalance[]>([]);
 
   // effect hooks
   const tokenIsSelected = (token: Token) => {
-    return selectedTokens.some((t) => t.address === token.address);
+    return selectedTokens.some((t) => t.token.address === token.address);
   };
 
-  const toggleToken = (token: Token) => {
-    if (tokenIsSelected(token)) {
+  const toggleToken = (tokenBalance: TokenBalance) => {
+    if (tokenIsSelected(tokenBalance.token)) {
       setSelectedTokens(
-        selectedTokens.filter((t) => t.address !== token.address)
+        selectedTokens.filter((t) => t.token.address !== tokenBalance.token.address)
       );
     } else {
-      setSelectedTokens([...selectedTokens, token]);
+      setSelectedTokens([...selectedTokens, tokenBalance]);
     }
   };
 
@@ -176,7 +176,7 @@ function DustPage() {
                           token={tokenBalance.token}
                           balance={tokenBalance.balance}
                           isSelected={tokenIsSelected(tokenBalance.token)}
-                          onClick={() => toggleToken(tokenBalance.token)}
+                          onClick={() => toggleToken(tokenBalance)}
                         />
                       </Grid>
                     ))}
@@ -187,7 +187,6 @@ function DustPage() {
               <div className="w-100 flex flex-col items-center my-6">
                 <Loading />
                 <Typography variant="body1">
-                  {" "}
                   Loading your wallet balance...
                 </Typography>
               </div>

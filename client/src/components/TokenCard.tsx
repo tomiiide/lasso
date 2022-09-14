@@ -21,7 +21,7 @@ export const TokenCard: React.FC<TokenCardProps> = ({
     <>
       <Card
         className={[
-          " px-6",
+          "px-6",
           styles.tokenCard,
           isSelected ? styles.selected : "",
         ].join(" ")}
