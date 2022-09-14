@@ -6,7 +6,7 @@ import styles from "./CleanWidget.module.scss";
 import { ArrowDownCircleIcon } from "@heroicons/react/24/outline";
 import Loading from 'react-loading'
 import JSConfetti from 'js-confetti'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const TokenListItem: React.FC<TokenCardProps> = ({ token, balance }) => {
@@ -60,8 +60,7 @@ export const CleanWidget: React.FC<CleanWidgetProps> = ({ selectedTokens, onClea
         emojis: ['🤠', '🧹', '✨', '🚀', '🔥'],
         confettiNumber: 100,
       })
-      toast.success( "Wallet cleaned successfully!")
-
+      toast.success("Wallet cleaned successfully!")
       onClean && onClean();
       setIsCleaning(false)
 
@@ -104,7 +103,6 @@ export const CleanWidget: React.FC<CleanWidgetProps> = ({ selectedTokens, onClea
           </Button>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

@@ -94,7 +94,7 @@ function DustPage() {
   const loadBalances = () => {
     setTimeout(() => {
       setTokenBalances(sampleTokenBalances);
-      setSelectedTokens([])
+      setSelectedTokens([]);
       setIsLoading(false);
     }, 2000);
   };
@@ -196,9 +196,11 @@ function DustPage() {
                     </div>
                   </>
                 ) : (
-                  <Typography variant="h6" className="mt-8">
-                    All clean chief, no dust found!
-                  </Typography>
+                  <div className="mt-8">
+                    <Typography variant="h6">
+                      All clean chief, no dust found!
+                    </Typography>
+                  </div>
                 )}
               </div>
             ) : (
