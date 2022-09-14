@@ -4,6 +4,10 @@ import { Token, TokenBalance } from "../pages/DustPage";
 import { TokenCardProps } from "./TokenCard";
 import styles from "./CleanWidget.module.scss";
 import { ArrowDownCircleIcon } from "@heroicons/react/24/outline";
+import Loading from 'react-loading'
+import JSConfetti from 'js-confetti'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TokenListItem: React.FC<TokenCardProps> = ({ token, balance }) => {
   return (
@@ -33,15 +37,35 @@ const NearToken: Token = {
 
 export interface CleanWidgetProps {
   selectedTokens: TokenBalance[];
+  onClean: () => void;
 }
 
-export const CleanWidget: React.FC<CleanWidgetProps> = ({ selectedTokens }) => {
+export const CleanWidget: React.FC<CleanWidgetProps> = ({ selectedTokens, onClean }) => {
+  const [isCleaning, setIsCleaning] = React.useState(false);
+
   const getTotalBalance = () => {
     const totalBalance = selectedTokens.reduce((acc, token) => {
       return acc + token.balance;
     }, 0);
 
     return parseFloat(totalBalance.toFixed(2));
+  };
+
+  const handleCleanWallet = () => {
+    setIsCleaning(true);
+    setTimeout(() => {
+    
+      const jsConfetti = new JSConfetti()
+      jsConfetti.addConfetti({
+        emojis: ['🤠', '🧹', '✨', '🚀', '🔥'],
+        confettiNumber: 100,
+      })
+      toast.success( "Wallet cleaned successfully!")
+
+      onClean && onClean();
+      setIsCleaning(false)
+
+    }, 2000);
   };
 
   return (
@@ -69,23 +93,18 @@ export const CleanWidget: React.FC<CleanWidgetProps> = ({ selectedTokens }) => {
           <ArrowDownCircleIcon />
         </div>
         <div className="w-full">
-          <Typography variant="h6">Receiving</Typography>
+          <Typography variant="subtitle1">Receiving</Typography>
           <div className="w-full ">
             <TokenListItem token={NearToken} balance={getTotalBalance()} />
           </div>
         </div>
-        <div className="w-full">
-          <a
-            href="/dustsweeper"
-            className="mt-10 relative w-full group sm:w-auto"
-          >
-            {/* <span className="absolute top-0 left-0 w-full h-full text-transparent border-2 border-white rounded">Join Today</span> */}
-            <span className="px-8 inline-block bg-gradient-to-br sm:w-auto w-full text-center from-green-500 font-semibold via-green-500 to-green-500 relative transition-all ease-linear duration-150 transform group-hover:-translate-y-1.5 group-hover:translate-x-1.5 -translate-y-2.5 text-lg rounded translate-x-2 py-4">
-              Clean Wallet
-            </span>
-          </a>
+        <div className="w-full m-8 flex items-center justify-center">
+          <Button variant="contained" onClick={handleCleanWallet} disabled={isCleaning}>
+            { isCleaning ? <Loading /> : "Clean Wallet" }
+          </Button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -53,12 +53,12 @@ const sampleTokenBalances = [
   },
   {
     token: {
-      symbol: "NEAR",
-      address: "0x1fa4a73a3f0133f0025378af00236f3abdee5d63",
+      symbol: "GRT",
+      address: "0xc944e90c64b2c07662a292be6244bdf05cda44a7",
       decimals: 6,
-      logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/6535.png",
+      logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/6719.png",
     },
-    balance: 1.345673,
+    balance: 2.35673,
   },
 ];
 
@@ -69,7 +69,9 @@ function DustPage() {
 
   // state hooks
   const [isloading, setIsLoading] = React.useState(true);
-  const [selectedTokens, setSelectedTokens] = React.useState<TokenBalance[]>([]);
+  const [selectedTokens, setSelectedTokens] = React.useState<TokenBalance[]>(
+    []
+  );
   const [tokenBalances, setTokenBalances] = React.useState<TokenBalance[]>([]);
 
   // effect hooks
@@ -80,7 +82,9 @@ function DustPage() {
   const toggleToken = (tokenBalance: TokenBalance) => {
     if (tokenIsSelected(tokenBalance.token)) {
       setSelectedTokens(
-        selectedTokens.filter((t) => t.token.address !== tokenBalance.token.address)
+        selectedTokens.filter(
+          (t) => t.token.address !== tokenBalance.token.address
+        )
       );
     } else {
       setSelectedTokens([...selectedTokens, tokenBalance]);
@@ -90,8 +94,14 @@ function DustPage() {
   const loadBalances = () => {
     setTimeout(() => {
       setTokenBalances(sampleTokenBalances);
+      setSelectedTokens([])
       setIsLoading(false);
     }, 2000);
+  };
+
+  const handleOnClean = () => {
+    setTokenBalances([]);
+    setSelectedTokens([]);
   };
 
   React.useEffect(() => {
@@ -157,31 +167,39 @@ function DustPage() {
                   selectedTokens.length > 0 ? "mr-96 " : "",
                 ].join(" ")}
               >
-                <div className="mt-12 mb-6">
-                  <Typography>
-                    Select all the tokens you want to clean
-                  </Typography>
-                </div>
-                <div>
-                  <Grid container spacing={4}>
-                    {tokenBalances.map((tokenBalance) => (
-                      <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={3}
-                        key={tokenBalance.token.address}
-                      >
-                        <TokenCard
-                          token={tokenBalance.token}
-                          balance={tokenBalance.balance}
-                          isSelected={tokenIsSelected(tokenBalance.token)}
-                          onClick={() => toggleToken(tokenBalance)}
-                        />
+                {tokenBalances.length > 0 ? (
+                  <>
+                    <div className="mt-12 mb-6">
+                      <Typography>
+                        Select all the tokens you want to clean
+                      </Typography>
+                    </div>
+                    <div>
+                      <Grid container spacing={4}>
+                        {tokenBalances.map((tokenBalance) => (
+                          <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={3}
+                            key={tokenBalance.token.address}
+                          >
+                            <TokenCard
+                              token={tokenBalance.token}
+                              balance={tokenBalance.balance}
+                              isSelected={tokenIsSelected(tokenBalance.token)}
+                              onClick={() => toggleToken(tokenBalance)}
+                            />
+                          </Grid>
+                        ))}
                       </Grid>
-                    ))}
-                  </Grid>
-                </div>
+                    </div>
+                  </>
+                ) : (
+                  <Typography variant="h6" className="mt-8">
+                    All clean chief, no dust found!
+                  </Typography>
+                )}
               </div>
             ) : (
               <div className="w-100 flex flex-col items-center my-6">
@@ -193,7 +211,10 @@ function DustPage() {
             )}
 
             {selectedTokens.length > 0 && (
-              <CleanWidget selectedTokens={selectedTokens} />
+              <CleanWidget
+                selectedTokens={selectedTokens}
+                onClean={handleOnClean}
+              />
             )}
           </section>
         </div>
