@@ -25,15 +25,15 @@ function App() {
                 </div>
 
                 <div className="absolute z-20 flex-col justify-center hidden pr-5 mt-4 space-y-8 md:flex md:relative md:pr-3 lg:pr-0 md:flex-row md:space-y-0 md:items-center md:space-x-6 md:mt-0">
-                    <a className="flex-shrink-0 font-semibold text-gray-200 hover:underline" href="#_">Learn More Here</a>
-                    <a href="#_" className="flex-shrink-0 w-auto text-base font-semibold leading-5 text-left text-gray-200 capitalize bg-transparent rounded-lg md:text-sm md:py-3 md:px-6 md:font-medium md:text-center md:text-white md:bg-gray-900 md:mx-0">
+                    <a className="flex-shrink-0 font-semibold text-gray-200 hover:underline" target="_blank" rel='noreferrer' href="https://www.tiktok.com/@lassoswap">Learn More Here</a>
+                    {/* <a href="#_" className="flex-shrink-0 w-auto text-base font-semibold leading-5 text-left text-gray-200 capitalize bg-transparent rounded-lg md:text-sm md:py-3 md:px-6 md:font-medium md:text-center md:text-white md:bg-gray-900 md:mx-0">
                         Sign Up
-                    </a>
+                    </a> */}
                 </div>
             </nav>
 
             <div className="flex flex-col items-center justify-center w-full h-full py-32 -mt-20 sm:py-48 md:py-64"> 
-                <h1 className="mb-20 text-5xl font-extrabold leading-tight text-left text-white sm:text-center lg:text-7xl lg:leading-tight">Earn more when you <br></br><span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-green-300 to-green-500">Clear out your wallet dust.</span></h1>
+                <h1 className="mb-20 text-5xl font-extrabold leading-tight text-left text-white sm:text-center lg:text-7xl lg:leading-tight">Clear out your wallet dust<br></br><span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-green-300 to-green-500">Round up for change.</span></h1>
                 <a href="/dustsweeper" className="mt-10 relative w-full group sm:w-auto">
                     <span className="absolute top-0 left-0 w-full h-full text-transparent border-2 border-white rounded">Join Today</span>
                     <span className="px-8 inline-block bg-gradient-to-br sm:w-auto w-full text-center from-green-500 font-semibold via-green-500 to-green-500 relative transition-all ease-linear duration-150 transform group-hover:-translate-y-1.5 group-hover:translate-x-1.5 -translate-y-2.5 text-lg rounded translate-x-2 py-4">Explore Lasso Today!</span>
