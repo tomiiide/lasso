@@ -67,7 +67,9 @@ export const swap = async (
     chainId: Number,
     signer: Signer
 ) => { 
-    
+    if(amount.length != fromTokenAddress.length){ new Error("array lengths need to be the same")};
+    if(fromTokenAddress.length > 4){ new Error("too many tokens being swapped")};
+
     const swaps: SwapParams[] = [];
     const swapDesc: SwapDesc[] = [];
     const swapData: PromiseOrValue<BytesLike>[] = [];
@@ -129,5 +131,7 @@ export const swap = async (
 
     const contract = await ethers.getContractAt("LassoSwap", LassoContract!, signer);
     const tx = await contract.multiSwap(swapDesc, swapData);
-    await tx.wait()
+    const receipt = await tx.wait()
+    
+    return receipt;
 }
