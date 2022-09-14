@@ -3,9 +3,10 @@ pragma solidity 0.8.9;
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
-// import "./Inch/interfaces/IOrderMixin.sol";
+
 import "@openzeppelin/contracts/access/Ownable.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 interface ExchangeCall {
     function swap(
@@ -25,6 +26,8 @@ interface IAggregationExecutor{
 }
 
 contract LassoSwap is Ownable {
+    using SafeERC20 for IERC20;
+
     ExchangeCall public exchange;
     uint256 maxSwaps;
 
@@ -59,26 +62,35 @@ contract LassoSwap is Ownable {
         maxSwaps = _maxSwaps;
     }
 
-    function multiSwap(SwapDescription[] calldata orderDetails, bytes[] calldata data) external {
-        require(orderDetails.length > maxSwaps, "MaxSwap exceeded");
+    function multiSwap(SwapDescription[] calldata desc, bytes[] calldata data) external {
+        require(desc.length > maxSwaps, "MaxSwap exceeded");
 
-        for(uint i = 0; i < orderDetails.length; i++){
-            require(
-                _lassoApprovedTokens(address(orderDetails[i].srcToken), _msgSender()) 
-                >= orderDetails[i].amount, 
-                "Not enough tokens approved to be transferred"
-            );
+        for(uint i = 0; i < desc.length; i++){
+            if (address(desc[i].srcToken) == address(0x0)) {
+                require(
+                    _lassoApprovedTokens(address(desc[i].srcToken), _msgSender()) 
+                    >= desc[i].amount, 
+                    "Not enough tokens approved to be transferred"
+                );
+
+                desc[i].srcToken.safeTransferFrom(
+                    _msgSender(),
+                    address(this),
+                    desc[i].amount
+                );
+                desc[i].srcToken.approve(address(exchange), desc[i].amount);
+            }
         }
 
-        Results[] memory orderResults = new Results[](orderDetails.length);
+        Results[] memory orderResults = new Results[](desc.length);
         
-        for(uint i = 0; i < orderDetails.length; i++){
-            try exchange.swap(IAggregationExecutor(msg.sender), orderDetails[i], data[i])
+        for(uint i = 0; i < desc.length; i++){
+            try exchange.swap(IAggregationExecutor(_msgSender()), desc[i], data[i])
             returns (uint256 returnAmount, uint256 gasLeft){
                 orderResults[i] = Results(
-                    orderDetails[i].srcToken, 
-                    orderDetails[i].dstToken,
-                    orderDetails[i].dstReceiver,
+                    desc[i].srcToken, 
+                    desc[i].dstToken,
+                    desc[i].dstReceiver,
                     returnAmount
                 );
             }
