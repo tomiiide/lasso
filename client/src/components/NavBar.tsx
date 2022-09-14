@@ -10,7 +10,7 @@ function NavBar() {
           <img src={logo} alt="#_"></img>
         </div>
       </label>
-        <a href="https://github.com/tomiiide/lasso" className="btn btn-ghost normal-cas text-white text-xl">lasso</a>
+        <a href="/" className="btn btn-ghost normal-cas text-white text-xl">lasso</a>
         <ul className="menu menu-horizontal p-0">
           <li><a href="/dustsweeper"className="text-bold text-white hover:bg-green-300 hover:text-black">Dust Sweeper</a></li>
           <li><a href="/exchange" className="text-bold text-white hover:bg-green-300 hover:text-black">Exchange</a></li>

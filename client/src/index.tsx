@@ -21,6 +21,9 @@ import {
 } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme'
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum],
@@ -45,6 +48,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+      <ThemeProvider theme={theme}>
+    {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+    <CssBaseline />
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={midnightTheme()} coolMode>
         <BrowserRouter>
@@ -57,6 +63,7 @@ root.render(
         </BrowserRouter>
       </RainbowKitProvider>
     </WagmiConfig>
+    </ThemeProvider>
 </React.StrictMode>
 );
 
