@@ -8,7 +8,7 @@ import { Typography, Grid, Button } from "@mui/material";
 import Loading from "react-loading";
 
 // hooks
-import { useAccount } from "wagmi";
+import { useAccount, useClient } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export type Token = {
@@ -62,11 +62,16 @@ const sampleTokenBalances = [
   },
 ];
 
+const CHAIN_ID = 1313161554;
+const COVALENT_API_KEY = "ckey_3de961d3184742cab2ad0fff597";
+
 function DustPage() {
   // wallet hooks
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
+  const { lastUsedChainId } = useClient();
   const { openConnectModal } = useConnectModal();
 
+  console.log(lastUsedChainId);
   // state hooks
   const [isloading, setIsLoading] = React.useState(true);
   const [selectedTokens, setSelectedTokens] = React.useState<TokenBalance[]>(
@@ -92,11 +97,35 @@ function DustPage() {
   };
 
   const loadBalances = () => {
-    setTimeout(() => {
-      setTokenBalances(sampleTokenBalances);
-      setSelectedTokens([]);
-      setIsLoading(false);
-    }, 2000);
+    fetch(
+      `https://api.covalenthq.com/v1/${CHAIN_ID}/address/${address}/balances_v2/?&key=${COVALENT_API_KEY}`
+    ).then((res) => {
+      res.json().then((data) => {
+        console.log(data);
+        const tokenBalances = data.data.items.map(
+          (item: {
+            contract_ticker_symbol: any;
+            contract_address: any;
+            contract_decimals: any;
+            logo_url: any;
+            balance: any;
+          }) => {
+            return {
+              token: {
+                symbol: item.contract_ticker_symbol,
+                address: item.contract_address,
+                decimals: item.contract_decimals,
+                logoURI: item.logo_url,
+              },
+              balance: item.balance,
+            };
+          }
+        );
+        setTokenBalances(tokenBalances);
+        setIsLoading(false);
+      });
+    });
+
   };
 
   const handleOnClean = () => {
